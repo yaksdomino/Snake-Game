@@ -128,6 +128,8 @@ let appliedGrowthSteps = 0;
 let nextObstacleSpawnAt = DEFAULT_OBSTACLE_INTERVAL_MS;
 let nextEnemySpawnAt = DEFAULT_ENEMY_SPAWN_INTERVAL_MS;
 let animationFrameId = 0;
+let activePointerId = null;
+let pointerAnchor = null;
 const settings = {
   moveIntervalMs: DEFAULT_MOVE_INTERVAL_MS,
   growthIntervalMs: DEFAULT_GROWTH_INTERVAL_MS,
@@ -551,6 +553,59 @@ function queueDirection(nextDirection) {
   if (canTurn(nextDirection)) {
     queuedDirection = nextDirection;
   }
+}
+
+function beginRunIfNeeded() {
+  if (!running) {
+    startGame();
+  }
+}
+
+function handleDirectionInput(nextDirection) {
+  beginRunIfNeeded();
+  queueDirection(nextDirection);
+}
+
+function getReferencePoint() {
+  if (snake.length > 0) {
+    const head = getCellCenter(snake[0]);
+    return head;
+  }
+
+  return {
+    x: canvas.width / 2,
+    y: canvas.height / 2,
+  };
+}
+
+function getDirectionFromDelta(dx, dy) {
+  if (Math.abs(dx) > Math.abs(dy)) {
+    return dx >= 0 ? { x: 1, y: 0 } : { x: -1, y: 0 };
+  }
+
+  return dy >= 0 ? { x: 0, y: 1 } : { x: 0, y: -1 };
+}
+
+function getCanvasPoint(event) {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  return {
+    x: (event.clientX - rect.left) * scaleX,
+    y: (event.clientY - rect.top) * scaleY,
+  };
+}
+
+function handlePointDirection(point) {
+  const reference = getReferencePoint();
+  const dx = point.x - reference.x;
+  const dy = point.y - reference.y;
+
+  if (Math.abs(dx) < 4 && Math.abs(dy) < 4) {
+    return;
+  }
+
+  handleDirectionInput(getDirectionFromDelta(dx, dy));
 }
 
 function moveSnake() {
@@ -1118,6 +1173,14 @@ window.addEventListener("keydown", (event) => {
     ArrowDown: { x: 0, y: 1 },
     ArrowLeft: { x: -1, y: 0 },
     ArrowRight: { x: 1, y: 0 },
+    w: { x: 0, y: -1 },
+    W: { x: 0, y: -1 },
+    s: { x: 0, y: 1 },
+    S: { x: 0, y: 1 },
+    a: { x: -1, y: 0 },
+    A: { x: -1, y: 0 },
+    d: { x: 1, y: 0 },
+    D: { x: 1, y: 0 },
   };
 
   const nextDirection = directions[event.key];
@@ -1127,12 +1190,45 @@ window.addEventListener("keydown", (event) => {
   }
 
   event.preventDefault();
+  handleDirectionInput(nextDirection);
+});
 
-  if (!running) {
-    startGame();
+canvas.addEventListener("pointerdown", (event) => {
+  activePointerId = event.pointerId;
+  pointerAnchor = getCanvasPoint(event);
+  canvas.setPointerCapture(event.pointerId);
+  handlePointDirection(pointerAnchor);
+});
+
+canvas.addEventListener("pointermove", (event) => {
+  if (event.pointerId !== activePointerId || !pointerAnchor) {
+    return;
   }
 
-  queueDirection(nextDirection);
+  const point = getCanvasPoint(event);
+  const dx = point.x - pointerAnchor.x;
+  const dy = point.y - pointerAnchor.y;
+
+  if (Math.hypot(dx, dy) < 14) {
+    return;
+  }
+
+  handleDirectionInput(getDirectionFromDelta(dx, dy));
+  pointerAnchor = point;
+});
+
+canvas.addEventListener("pointerup", (event) => {
+  if (event.pointerId === activePointerId) {
+    activePointerId = null;
+    pointerAnchor = null;
+  }
+});
+
+canvas.addEventListener("pointercancel", (event) => {
+  if (event.pointerId === activePointerId) {
+    activePointerId = null;
+    pointerAnchor = null;
+  }
 });
 
 restartButton.addEventListener("click", resetGame);

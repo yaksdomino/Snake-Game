@@ -114,6 +114,7 @@ canvas {
   display: block;
   margin: 0 auto;
   aspect-ratio: 1;
+  touch-action: none;
   border-radius: 22px;
   background:
     linear-gradient(var(--grid) 1px, transparent 1px),
