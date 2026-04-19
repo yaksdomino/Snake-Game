@@ -53,6 +53,28 @@
         <details class="options-panel">
           <summary>Options</summary>
           <div class="options-grid">
+            <label class="toggle-field" for="obstaclesEnabled">
+              <span>Obstacles</span>
+              <input
+                id="obstaclesEnabled"
+                name="obstaclesEnabled"
+                type="checkbox"
+                checked
+              />
+              <small>Turn rock obstacles on or off.</small>
+            </label>
+
+            <label class="toggle-field" for="enemySnakesEnabled">
+              <span>Additional snakes</span>
+              <input
+                id="enemySnakesEnabled"
+                name="enemySnakesEnabled"
+                type="checkbox"
+                checked
+              />
+              <small>Enable or disable autonomous snakes.</small>
+            </label>
+
             <label class="option-field" for="obstacleRate">
               <span>Obstacle every</span>
               <input
@@ -90,6 +112,20 @@
                 value="0.15"
               />
               <small>Seconds between movement steps. Lower values make the snake faster.</small>
+            </label>
+
+            <label class="slider-field" for="enemySnakeRate">
+              <span>Extra snake every <strong id="enemySnakeRateValue">10s</strong></span>
+              <input
+                id="enemySnakeRate"
+                name="enemySnakeRate"
+                type="range"
+                min="5"
+                max="60"
+                step="1"
+                value="10"
+              />
+              <small>Adjust how often a new autonomous snake appears.</small>
             </label>
           </div>
           <p class="options-note">Changing options applies to the current run immediately.</p>

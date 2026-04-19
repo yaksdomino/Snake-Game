@@ -118,9 +118,10 @@ canvas {
   background:
     linear-gradient(var(--grid) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid) 1px, transparent 1px),
-    var(--board);
+    linear-gradient(180deg, rgba(147, 185, 104, 0.2), rgba(72, 123, 63, 0.16)),
+    #7ea35a;
   background-size: 30px 30px;
-  border: 1px solid rgba(106, 86, 66, 0.15);
+  border: 1px solid rgba(66, 88, 49, 0.22);
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.7),
     inset 0 18px 40px rgba(255, 255, 255, 0.4);
@@ -180,6 +181,14 @@ canvas {
   font-weight: 700;
 }
 
+.toggle-field,
+.slider-field {
+  display: grid;
+  gap: 8px;
+  color: var(--ink);
+  font-weight: 700;
+}
+
 .option-field input {
   width: 100%;
   border: 1px solid rgba(106, 86, 66, 0.22);
@@ -189,6 +198,44 @@ canvas {
   font-weight: 500;
   color: var(--ink);
   background: #fffdf7;
+}
+
+.toggle-field input[type="checkbox"] {
+  appearance: none;
+  width: 56px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid rgba(106, 86, 66, 0.22);
+  background: linear-gradient(180deg, #d7c8b5, #c5b39c);
+  position: relative;
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+
+.toggle-field input[type="checkbox"]::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #fffdf7;
+  box-shadow: 0 2px 8px rgba(65, 48, 31, 0.16);
+  transition: transform 160ms ease;
+}
+
+.toggle-field input[type="checkbox"]:checked {
+  background: linear-gradient(180deg, #78a451, #527f3d);
+}
+
+.toggle-field input[type="checkbox"]:checked::after {
+  transform: translateX(23px);
+}
+
+.slider-field input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent-dark);
 }
 
 .option-field small,
