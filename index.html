@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Snake Game</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="game-shell">
+      <section class="game-panel">
+        <div class="hud">
+          <div class="stat-block stat-block-left">
+            <span class="score-label">Length</span>
+            <span class="score-value" id="length">4</span>
+          </div>
+          <div class="title-block">
+            <p class="eyebrow">Arcade Classic</p>
+            <h1>Snake</h1>
+          </div>
+          <div class="stat-block score-block">
+            <span class="score-label">Time</span>
+            <span class="score-value" id="score">0.0s</span>
+          </div>
+        </div>
+
+        <div class="board-wrap">
+          <canvas
+            id="game"
+            width="600"
+            height="600"
+            aria-label="Snake game board"
+          ></canvas>
+
+          <div class="overlay hidden" id="overlay" aria-live="polite">
+            <div class="overlay-card">
+              <p class="overlay-label" id="overlayLabel">Press an arrow key to begin</p>
+              <h2 id="overlayTitle">Stay alive as long as you can</h2>
+              <p id="overlayText">
+                The snake grows steadily over time. Dodge walls, obstacles, and your
+                own body.
+              </p>
+              <button id="overlayButton" type="button">Start Game</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-bar">
+          <p>Use the arrow keys to move. Avoid obstacles and your own tail.</p>
+          <button id="restart" type="button">Restart</button>
+        </div>
+
+        <details class="options-panel">
+          <summary>Options</summary>
+          <div class="options-grid">
+            <label class="option-field" for="obstacleRate">
+              <span>Obstacle every</span>
+              <input
+                id="obstacleRate"
+                name="obstacleRate"
+                type="number"
+                min="0.2"
+                step="0.1"
+                value="1.0"
+              />
+              <small>Seconds between new obstacles. The game starts with none.</small>
+            </label>
+
+            <label class="option-field" for="growthRate">
+              <span>Grow every</span>
+              <input
+                id="growthRate"
+                name="growthRate"
+                type="number"
+                min="0.2"
+                step="0.1"
+                value="2.0"
+              />
+              <small>Seconds between automatic snake growth steps.</small>
+            </label>
+
+            <label class="option-field" for="speedRate">
+              <span>Move every</span>
+              <input
+                id="speedRate"
+                name="speedRate"
+                type="number"
+                min="0.05"
+                step="0.01"
+                value="0.15"
+              />
+              <small>Seconds between movement steps. Lower values make the snake faster.</small>
+            </label>
+          </div>
+          <p class="options-note">Changing options applies to the current run immediately.</p>
+        </details>
+
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
