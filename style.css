@@ -201,6 +201,17 @@ canvas {
   background: #fffdf7;
 }
 
+.option-field select {
+  width: 100%;
+  border: 1px solid rgba(106, 86, 66, 0.22);
+  border-radius: 14px;
+  padding: 12px 14px;
+  font: inherit;
+  font-weight: 500;
+  color: var(--ink);
+  background: #fffdf7;
+}
+
 .toggle-field input[type="checkbox"] {
   appearance: none;
   width: 56px;
