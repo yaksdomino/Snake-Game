@@ -3,11 +3,35 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Snake Game</title>
+    <title>SSSS-nake</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:wght@500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <main class="game-shell">
+    <main class="mode-menu" id="modeMenu">
+      <section class="mode-menu-card" aria-labelledby="menuTitle">
+        <svg class="snake-logo" viewBox="0 0 160 160" role="img" aria-labelledby="logoTitle logoDesc">
+          <title id="logoTitle">SSSS-nake Arcade Cobra logo</title>
+          <desc id="logoDesc">An angular cobra inside a dark arcade shield.</desc>
+          <path class="logo-shield" d="M80 7 139 30v45c0 37-24 62-59 78C45 137 21 112 21 75V30Z" />
+          <path class="logo-cobra" d="M80 26c-27 5-37 24-29 45 5 13 14 20 24 25-8 12-8 26 4 38 13-12 14-26 6-38 11-5 20-12 25-25 8-21-3-40-30-45Z" />
+          <path class="logo-features" d="m63 58 11 5m23-5-11 5M70 76h20" />
+          <path class="logo-tongue" d="M80 134v13m0-1-7 7m7-7 7 7" />
+        </svg>
+        <p class="eyebrow">Choose your arena</p>
+        <h1 id="menuTitle">SSSS-nake</h1>
+        <p class="menu-intro">Three ways to slither. Pick a mode to begin.</p>
+        <div class="mode-grid">
+          <button class="mode-card" type="button" data-mode="competitive"><strong>Competitive</strong><span>Survive escalating hazards and beat your local high score.</span></button>
+          <button class="mode-card" type="button" data-mode="sandbox"><strong>Sandbox</strong><span>Change the rules live, wrap through walls, and experiment freely.</span></button>
+          <button class="mode-card" type="button" data-mode="classic"><strong>Classic</strong><span>Eat fruit, grow longer, and avoid the walls and your tail.</span></button>
+        </div>
+      </section>
+    </main>
+
+    <main class="game-shell" id="gameShell" hidden>
       <section class="game-panel">
         <div class="hud">
           <div class="stat-block stat-block-left">
@@ -15,12 +39,16 @@
             <span class="score-value" id="length">4</span>
           </div>
           <div class="title-block">
-            <p class="eyebrow">Arcade Classic</p>
-            <h1>Snake</h1>
+            <p class="eyebrow" id="modeName">Competitive</p>
+            <h1>SSSS-nake</h1>
           </div>
           <div class="stat-block score-block">
-            <span class="score-label">Time</span>
-            <span class="score-value" id="score">0.0s</span>
+            <span class="score-label" id="scoreLabel">Score</span>
+            <span class="score-value" id="score">0</span>
+          </div>
+          <div class="stat-block score-block" id="bestBlock">
+            <span class="score-label">Best</span>
+            <span class="score-value" id="bestScore">0</span>
           </div>
         </div>
 
@@ -30,7 +58,7 @@
             width="600"
             height="600"
             aria-label="Snake game board"
-          ></canvas>
+          >Your browser does not support the canvas used by this Snake game.</canvas>
 
           <div class="overlay hidden" id="overlay" aria-live="polite">
             <div class="overlay-card">
@@ -46,14 +74,17 @@
         </div>
 
         <div class="footer-bar">
-          <p>Use arrow keys, WASD, mouse, or touch to move. Avoid obstacles and your own tail.</p>
-          <button id="restart" type="button">Restart</button>
+          <p id="modeInstructions">Use arrow keys, WASD, mouse, or touch to move.</p>
+          <div class="footer-actions">
+            <button id="changeMode" class="secondary-button" type="button">Change Mode</button>
+            <button id="restart" type="button">Restart</button>
+          </div>
         </div>
 
         <details class="options-panel">
           <summary>Options</summary>
           <div class="options-grid">
-            <label class="toggle-field" for="obstaclesEnabled">
+            <label class="toggle-field gameplay-option" for="obstaclesEnabled">
               <span>Obstacles</span>
               <input
                 id="obstaclesEnabled"
@@ -64,7 +95,7 @@
               <small>Turn rock obstacles on or off.</small>
             </label>
 
-            <label class="toggle-field" for="enemySnakesEnabled">
+            <label class="toggle-field gameplay-option" for="enemySnakesEnabled">
               <span>Additional snakes</span>
               <input
                 id="enemySnakesEnabled"
@@ -86,7 +117,7 @@
               <small>Swap between the current sketch snake and the earlier styles.</small>
             </label>
 
-            <label class="option-field" for="obstacleRate">
+            <label class="option-field gameplay-option" for="obstacleRate">
               <span>Obstacle every</span>
               <input
                 id="obstacleRate"
@@ -99,7 +130,7 @@
               <small>Seconds between new obstacles. The game starts with none.</small>
             </label>
 
-            <label class="option-field" for="growthRate">
+            <label class="option-field gameplay-option" for="growthRate">
               <span>Grow every</span>
               <input
                 id="growthRate"
@@ -112,7 +143,7 @@
               <small>Seconds between automatic snake growth steps.</small>
             </label>
 
-            <label class="option-field" for="speedRate">
+            <label class="option-field gameplay-option" for="speedRate">
               <span>Move every</span>
               <input
                 id="speedRate"
@@ -125,7 +156,7 @@
               <small>Seconds between movement steps. Lower values make the snake faster.</small>
             </label>
 
-            <label class="slider-field" for="enemySnakeRate">
+            <label class="slider-field gameplay-option" for="enemySnakeRate">
               <span>Extra snake every <strong id="enemySnakeRateValue">10s</strong></span>
               <input
                 id="enemySnakeRate"
@@ -138,6 +169,16 @@
               />
               <small>Adjust how often a new autonomous snake appears.</small>
             </label>
+
+            <div class="sandbox-actions" id="sandboxActions" hidden>
+              <span>Board tools</span>
+              <div>
+                <button id="addObstacle" type="button">Add rock</button>
+                <button id="addEnemy" type="button">Add snake</button>
+                <button id="addPowerUp" type="button">Add fruit</button>
+                <button id="clearBoard" class="secondary-button" type="button">Clear hazards</button>
+              </div>
+            </div>
           </div>
           <p class="options-note">Changing options applies to the current run immediately.</p>
         </details>
@@ -145,6 +186,6 @@
       </section>
     </main>
 
-    <script src="./script.js"></script>
+    <script type="module" src="./script.js"></script>
   </body>
 </html>
