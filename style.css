@@ -441,26 +441,54 @@ select:focus-visible {
   }
 
   .hud {
-    align-items: flex-start;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-areas:
+      "title title title"
+      "length score best";
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: end;
+    gap: 14px 10px;
   }
 
   .title-block {
-    order: -1;
+    grid-area: title;
     width: 100%;
-    text-align: left;
+    text-align: center;
   }
 
   h1 {
-    text-align: left;
+    font-size: clamp(1.9rem, 10vw, 2.7rem);
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
   }
 
   .stat-block {
     min-width: 0;
   }
 
+  .stat-block-left {
+    grid-area: length;
+  }
+
   .score-block {
-    min-width: 100px;
+    min-width: 0;
+  }
+
+  .score-block:not(#bestBlock) {
+    grid-area: score;
+    text-align: center;
+  }
+
+  #bestBlock {
+    grid-area: best;
+  }
+
+  .hud:has(#bestBlock[hidden]) {
+    grid-template-areas:
+      "title title"
+      "length score";
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .footer-bar {
